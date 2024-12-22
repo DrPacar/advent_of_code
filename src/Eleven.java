@@ -15,13 +15,45 @@ public class Eleven {
 
         // 1
         LinkedList<Long> stones = transformStones(inputString);
-        for (int i = 1; i < 75; i++) {
+        for (int i = 1; i < 25; i++) {
             System.out.println("YO " + i);
-            transformStones(stones);
+            //transformStones(stones);
         }
         System.out.println("2 " + stones.size());
 
+
         //198075
+
+        // too low 943069756
+        long count = 0;
+        LinkedList<Long> stones2 = transformStones(inputString);
+        for (int i = 0; i < stones2.size(); i++) {
+            long stone = stones2.get(i);
+            count += blink(stone, 75-1);
+        }
+        System.out.println("COUNT: " + count);
+    }
+
+    static HashMap<Long, Long> map = new HashMap<>();
+    private static long blink(long item, int times) {
+        long hash = fastHash(item, times);
+        if (map.containsKey(hash)) return map.get(hash);
+        if (times == 0) return 1;
+        long length;
+        long output;
+        if (item == 0) {
+            output = blink(1L, times-1);
+        } else if ((length = getDigitLength(item)) % 2 == 0) {
+            long[] split = splitLongInto2Parts(item, length);
+            output = blink(split[0], times-1) + blink(split[1], times-1);
+        } else {
+            output = blink(item * 2024, times-1);
+        }
+        map.put(hash,output);
+        return output;
+    }
+    public static long fastHash(long x, int y) {
+        return (x << 32) | (y & 0xFFFFFFFFL);
     }
 
     private static LinkedList<Long> transformStones(String stones) {
