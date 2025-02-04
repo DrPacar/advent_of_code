@@ -50,6 +50,15 @@ public class Tools {
     }
 
     /**
+     * Solves a Day of a specific year
+     * @param year The AOC_Year
+     * @param day The Day to solve
+     */
+    public static void solve_Day(int year, int day) {
+        solve_Day(year, day, "resources/aoc_" + year + "/Day" + day);
+    }
+
+    /**
      * Invokes 2 Methods of a given class
      * @param className class the methods belong to
      * @return Array with the Outputs of the 2 Methods
