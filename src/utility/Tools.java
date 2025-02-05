@@ -13,6 +13,104 @@ import java.util.Objects;
 
 public class Tools {
 
+    // Direction
+
+    /** Represents a Direction in a 2D Space */
+    public enum Direction {
+        TOP_LEFT(-1, -1),
+        TOP(-1, 0),
+        TOP_RIGHT(-1, 1),
+        RIGHT(0, 1),
+        BOTTOM_RIGHT(1, 1),
+        BOTTOM(1, 0),
+        BOTTOM_LEFT(1, -1),
+        LEFT(0, -1),
+        NONE(0, 0);
+
+        final int rowDir;
+        final int colDir;
+
+        /**
+         * Represents a Direction in a 2D Space
+         * @param rowDir The vertical (row) direction-change-value
+         * @param colDir The horizontal (col) direction-change-value
+         */
+        Direction (int rowDir, int colDir) {
+            this.rowDir = rowDir;
+            this.colDir = colDir;
+        }
+
+        // Getters
+        /** Returns the vertical (row) direction-change-value */
+        public int getVerticalChange() {return rowDir;}
+        /** Returns the horizontal (col) direction-change-value */
+        public int getHorizontalChange() {return colDir;}
+        /** Returns the Direction for the given row and col change */
+        public int[] getChange() {return new int[]{rowDir, colDir};}
+
+        /** Returns the Direction for the given row and col change */
+        public static Direction getDirection(int rowChange, int colChange) {
+            for (Direction dir : Direction.values()) {
+                if (dir.rowDir == rowChange && dir.colDir == colChange) return dir;
+            }
+            return NONE;
+        }
+
+        /** Turns the Direction 90° to the right */
+        public Direction turn90DegreesRight() {
+            return getDirection(TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT, TOP);
+        }
+
+        /** Turns the Direction 45° to the right */
+        public Direction turn45DegreesRight() {
+            return getDirection(TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT);
+        }
+
+        /** Turns the Direction 90° to the left */
+        public Direction turn90DegreesLeft() {
+            return getDirection(BOTTOM_LEFT, LEFT, TOP_LEFT, TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM);
+        }
+
+        /** Turns the Direction 45° to the left */
+        public Direction turn45DegreesLeft() {
+            return getDirection(LEFT, TOP_LEFT, TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT);
+        }
+
+
+        /** Turns the Direction 180° */
+        public Direction turn180Degrees() {
+            return getDirection(BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT, TOP, TOP_RIGHT, RIGHT);
+        }
+
+        /**
+         * Executes Direction Mapping
+         * @param direction  Source: TOP_LEFT
+         * @param direction2 Source: TOP
+         * @param direction3 Source: TOP_RIGHT
+         * @param direction4 Source: RIGHT
+         * @param direction5 Source: BOTTOM_RIGHT
+         * @param direction6 Source: BOTTOM
+         * @param direction7 Source: BOTTOM_LEFT
+         * @param direction8 Source: LEFT
+         * @return The mapped Direction
+         */
+        private Direction getDirection(Direction direction, Direction direction2, Direction direction3, Direction direction4, Direction direction5, Direction direction6, Direction direction7, Direction direction8) {
+            return switch (this) {
+                case TOP_LEFT       -> direction;
+                case TOP            -> direction2;
+                case TOP_RIGHT      -> direction3;
+                case RIGHT          -> direction4;
+                case BOTTOM_RIGHT   -> direction5;
+                case BOTTOM         -> direction6;
+                case BOTTOM_LEFT    -> direction7;
+                case LEFT           -> direction8;
+                default             -> NONE;
+            };
+        }
+    }
+
+    // Point
+
     /** Represents a Point in a 2D Space (using long as coordinates)*/
     public static class Point2D {
         int x;
@@ -148,6 +246,21 @@ public class Tools {
             map.add(row);
         }
         return map;
+    }
+
+    /**
+     * Looks for a specific Character in a 2D-Map and returns the first Point where it was found
+     * @param map The Map to search in
+     * @param startChar The Character to search for
+     * @return The first Point where the Character was found
+     */
+    public static Point2D findMapPoint(List<List<Character>> map, char startChar) {
+        for (int i = 0; i < map.size(); i++) {
+            for (int j = 0; j < map.getFirst().size(); j++) {
+                if (map.get(i).get(j) == startChar) return new Point2D(i, j);
+            }
+        }
+        return null;
     }
 
     /**
